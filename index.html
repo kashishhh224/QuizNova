@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="QuizNova — A modern, futuristic online quiz maker. Create, share, and take quizzes with real-time scoring, timers, and beautiful UI." />
+  <title>QuizNova — Online Quiz Maker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="#" class="nav-logo">
+        <span class="logo-icon">◆</span> Quiz<span class="logo-accent">Nova</span>
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#hero">Home</a></li>
+        <li><a href="#create">Create</a></li>
+        <li><a href="#preview">Quiz</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#stats">Stats</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+      <div class="nav-auth" id="navAuth">
+        <!-- Logged out state -->
+        <div class="auth-buttons" id="authButtons">
+          <button class="btn btn-secondary btn-sm" id="loginNavBtn">Login</button>
+          <button class="btn btn-primary btn-sm" id="signupNavBtn">Sign Up</button>
+        </div>
+        <!-- Logged in state -->
+        <div class="user-menu hidden" id="userMenu">
+          <button class="user-menu-toggle" id="userMenuToggle">
+            <span class="user-avatar" id="userAvatar">U</span>
+            <span class="user-name" id="userName">User</span>
+            <span class="user-chevron">▾</span>
+          </button>
+          <div class="user-dropdown" id="userDropdown">
+            <div class="dropdown-header">
+              <span class="dropdown-name" id="dropdownName">User</span>
+              <span class="dropdown-email" id="dropdownEmail">user@email.com</span>
+            </div>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-item" id="myQuizzesNavBtn">📝 My Quizzes</button>
+            <button class="dropdown-item" id="logoutBtn">🚪 Logout</button>
+          </div>
+        </div>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ===== HERO SECTION ===== -->
+  <section class="hero" id="hero">
+    <div class="hero-glow hero-glow--cyan"></div>
+    <div class="hero-glow hero-glow--purple"></div>
+    <div class="hero-grid"></div>
+    <div class="container hero-content">
+      <span class="hero-badge">✦ Next-Gen Quiz Platform</span>
+      <h1 class="hero-title">
+        Create Stunning Quizzes<br />
+        <span class="gradient-text">In Seconds.</span>
+      </h1>
+      <p class="hero-description">
+        Build interactive quizzes with real-time scoring, timers, and beautiful analytics. 
+        Designed for educators, teams, and creators who demand excellence.
+      </p>
+      <div class="hero-actions">
+        <a href="#create" class="btn btn-primary" id="heroCreateBtn">
+          <span class="btn-icon">＋</span> Create Quiz
+        </a>
+        <a href="#preview" class="btn btn-secondary" id="heroStartBtn">
+          <span class="btn-icon">▶</span> Start Quiz
+        </a>
+      </div>
+      <div class="hero-stats-mini">
+        <div class="hero-stat-mini">
+          <span class="hero-stat-number">10K+</span>
+          <span class="hero-stat-label">Quizzes Created</span>
+        </div>
+        <div class="hero-stat-divider"></div>
+        <div class="hero-stat-mini">
+          <span class="hero-stat-number">50K+</span>
+          <span class="hero-stat-label">Active Users</span>
+        </div>
+        <div class="hero-stat-divider"></div>
+        <div class="hero-stat-mini">
+          <span class="hero-stat-number">98%</span>
+          <span class="hero-stat-label">Satisfaction</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-scroll-indicator">
+      <span>Scroll to explore</span>
+      <div class="scroll-arrow"></div>
+    </div>
+  </section>
+
+  <!-- ===== QUIZ CREATION SECTION ===== -->
+  <section class="section" id="create">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">Create</span>
+        <h2 class="section-title">Build Your Quiz</h2>
+        <p class="section-subtitle">Add questions, set correct answers, and launch your quiz in minutes.</p>
+      </div>
+      <!-- Login prompt for logged-out users -->
+      <div class="auth-prompt glass-card" id="createAuthPrompt">
+        <div class="auth-prompt-icon">🔒</div>
+        <h3>Login Required</h3>
+        <p>Please log in or sign up to create quizzes.</p>
+        <button class="btn btn-primary" id="createLoginBtn"><span class="btn-icon">→</span> Login to Create</button>
+      </div>
+      <div class="create-card glass-card hidden" id="createCard">
+        <div class="create-form" id="quizForm">
+          <div class="form-group">
+            <label for="quizTitleInput" class="form-label">Quiz Title</label>
+            <input type="text" id="quizTitleInput" class="form-input" placeholder="e.g. JavaScript Basics Quiz" />
+          </div>
+          <div class="form-group">
+            <label for="questionInput" class="form-label">Question</label>
+            <input type="text" id="questionInput" class="form-input" placeholder="Enter your question here..." />
+          </div>
+          <div class="options-grid">
+            <div class="form-group">
+              <label for="option1" class="form-label">Option A</label>
+              <input type="text" id="option1" class="form-input" placeholder="Option A" />
+            </div>
+            <div class="form-group">
+              <label for="option2" class="form-label">Option B</label>
+              <input type="text" id="option2" class="form-input" placeholder="Option B" />
+            </div>
+            <div class="form-group">
+              <label for="option3" class="form-label">Option C</label>
+              <input type="text" id="option3" class="form-input" placeholder="Option C" />
+            </div>
+            <div class="form-group">
+              <label for="option4" class="form-label">Option D</label>
+              <input type="text" id="option4" class="form-input" placeholder="Option D" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="correctAnswer" class="form-label">Correct Answer</label>
+            <select id="correctAnswer" class="form-select">
+              <option value="" disabled selected>Select correct answer</option>
+              <option value="0">Option A</option>
+              <option value="1">Option B</option>
+              <option value="2">Option C</option>
+              <option value="3">Option D</option>
+            </select>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-primary" id="saveQuizBtn">
+              <span class="btn-icon">💾</span> Save Question
+            </button>
+            <button class="btn btn-secondary" id="clearFormBtn">
+              <span class="btn-icon">✕</span> Clear
+            </button>
+          </div>
+        </div>
+        <!-- Saved questions preview -->
+        <div class="saved-questions" id="savedQuestions">
+          <h3 class="saved-title">Saved Questions <span class="question-count" id="questionCount">(0)</span></h3>
+          <div class="questions-list" id="questionsList">
+            <p class="empty-state">No questions added yet. Start creating!</p>
+          </div>
+          <div class="save-quiz-actions" id="saveQuizActions" style="margin-top:20px">
+            <button class="btn btn-primary" id="publishQuizBtn" disabled>
+              <span class="btn-icon">🚀</span> Publish Quiz
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== LIVE QUIZ PREVIEW SECTION ===== -->
+  <section class="section section-alt" id="preview">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">Play</span>
+        <h2 class="section-title">Take the Quiz</h2>
+        <p class="section-subtitle">Browse available quizzes and test your knowledge.</p>
+      </div>
+
+      <!-- Quiz browser -->
+      <div class="quiz-browser" id="quizBrowser">
+        <div class="browser-tabs">
+          <button class="browser-tab active" id="tabAllQuizzes" data-tab="all">All Quizzes</button>
+          <button class="browser-tab" id="tabMyQuizzes" data-tab="my">My Quizzes</button>
+        </div>
+        <div class="quiz-grid" id="quizGrid">
+          <div class="empty-state" style="text-align:center;padding:40px;grid-column:1/-1">
+            <p>No quizzes available yet. Create one to get started!</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quiz start screen -->
+      <div class="quiz-start glass-card hidden" id="quizStartScreen">
+        <div class="quiz-start-icon">🚀</div>
+        <h3 id="quizStartTitle">Ready to Begin?</h3>
+        <p>This quiz has <strong id="totalQuestionsDisplay">0</strong> questions.</p>
+        <button class="btn btn-primary btn-lg" id="startQuizBtn">
+          <span class="btn-icon">▶</span> Start Quiz
+        </button>
+        <button class="btn btn-secondary" id="backToBrowserBtn" style="margin-top:12px">
+          <span class="btn-icon">←</span> Back to Quizzes
+        </button>
+      </div>
+
+      <!-- Active quiz -->
+      <div class="quiz-active glass-card hidden" id="quizActiveScreen">
+        <div class="quiz-header">
+          <div class="quiz-progress-info">
+            <span id="quizQuestionNum">Question 1</span>
+            <span id="quizQuestionTotal">of 5</span>
+          </div>
+          <div class="quiz-timer" id="quizTimer">
+            <span class="timer-icon">⏱</span>
+            <span id="timerDisplay">00:30</span>
+          </div>
+        </div>
+        <div class="quiz-progress-bar">
+          <div class="quiz-progress-fill" id="quizProgressFill"></div>
+        </div>
+        <div class="quiz-body">
+          <h3 class="quiz-question" id="quizQuestionText">Sample Question?</h3>
+          <div class="quiz-options" id="quizOptions">
+            <!-- Options injected by JS -->
+          </div>
+        </div>
+        <div class="quiz-footer">
+          <button class="btn btn-primary" id="nextQuestionBtn" disabled>
+            Next <span class="btn-arrow">→</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== RESULT SECTION ===== -->
+  <section class="section hidden" id="result">
+    <div class="container">
+      <div class="result-card glass-card" id="resultCard">
+        <div class="result-icon" id="resultIcon">🏆</div>
+        <h2 class="result-title" id="resultTitle">Congratulations!</h2>
+        <p class="result-message" id="resultMessage">You did an amazing job!</p>
+        <div class="result-score-ring">
+          <svg class="score-ring" viewBox="0 0 200 200">
+            <circle cx="100" cy="100" r="85" class="score-ring-bg" />
+            <circle cx="100" cy="100" r="85" class="score-ring-fill" id="scoreRingFill" />
+          </svg>
+          <div class="score-ring-text">
+            <span class="score-percent" id="scorePercent">0%</span>
+            <span class="score-label">Score</span>
+          </div>
+        </div>
+        <div class="result-stats">
+          <div class="result-stat">
+            <span class="result-stat-value correct" id="correctCount">0</span>
+            <span class="result-stat-label">Correct</span>
+          </div>
+          <div class="result-stat">
+            <span class="result-stat-value wrong" id="wrongCount">0</span>
+            <span class="result-stat-label">Wrong</span>
+          </div>
+          <div class="result-stat">
+            <span class="result-stat-value" id="totalQuizQuestions">0</span>
+            <span class="result-stat-label">Total</span>
+          </div>
+          <div class="result-stat">
+            <span class="result-stat-value" id="finalScore">0</span>
+            <span class="result-stat-label">Points</span>
+          </div>
+        </div>
+        <div class="result-actions">
+          <button class="btn btn-primary" id="retakeBtn">
+            <span class="btn-icon">🔄</span> Retake Quiz
+          </button>
+          <button class="btn btn-secondary" id="newQuizBtn">
+            <span class="btn-icon">＋</span> Create New
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FEATURES SECTION ===== -->
+  <section class="section" id="features">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">Features</span>
+        <h2 class="section-title">Why QuizNova?</h2>
+        <p class="section-subtitle">Everything you need to create, share, and analyze quizzes — all in one place.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card glass-card" data-aos>
+          <div class="feature-icon feature-icon--cyan">⚡</div>
+          <h3 class="feature-title">Live Quiz Mode</h3>
+          <p class="feature-desc">Host real-time quizzes with instant feedback and live leaderboards for competitive fun.</p>
+        </div>
+        <div class="feature-card glass-card" data-aos>
+          <div class="feature-icon feature-icon--purple">📊</div>
+          <h3 class="feature-title">Auto Score Calculation</h3>
+          <p class="feature-desc">Scores are calculated instantly with detailed breakdowns and performance analytics.</p>
+        </div>
+        <div class="feature-card glass-card" data-aos>
+          <div class="feature-icon feature-icon--cyan">📱</div>
+          <h3 class="feature-title">Mobile Friendly</h3>
+          <p class="feature-desc">Fully responsive design that works flawlessly on phones, tablets, and desktops.</p>
+        </div>
+        <div class="feature-card glass-card" data-aos>
+          <div class="feature-icon feature-icon--purple">🚀</div>
+          <h3 class="feature-title">Fast Performance</h3>
+          <p class="feature-desc">Lightning-fast load times with optimized rendering for smooth experiences.</p>
+        </div>
+        <div class="feature-card glass-card" data-aos>
+          <div class="feature-icon feature-icon--cyan">🎨</div>
+          <h3 class="feature-title">Interactive UI</h3>
+          <p class="feature-desc">Beautiful animations, transitions, and micro-interactions for engaging quizzes.</p>
+        </div>
+        <div class="feature-card glass-card" data-aos>
+          <div class="feature-icon feature-icon--purple">📈</div>
+          <h3 class="feature-title">Progress Tracking</h3>
+          <p class="feature-desc">Track quiz completion, score history, and improvement trends over time.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== STATISTICS SECTION ===== -->
+  <section class="section section-alt" id="stats">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">Numbers</span>
+        <h2 class="section-title">Platform Statistics</h2>
+        <p class="section-subtitle">See the impact QuizNova is making across the globe.</p>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card glass-card" data-aos>
+          <div class="stat-icon">📝</div>
+          <div class="stat-number" data-target="12500">0</div>
+          <div class="stat-label">Total Quizzes</div>
+        </div>
+        <div class="stat-card glass-card" data-aos>
+          <div class="stat-icon">👥</div>
+          <div class="stat-number" data-target="54000">0</div>
+          <div class="stat-label">Active Users</div>
+        </div>
+        <div class="stat-card glass-card" data-aos>
+          <div class="stat-icon">❓</div>
+          <div class="stat-number" data-target="187000">0</div>
+          <div class="stat-label">Questions Created</div>
+        </div>
+        <div class="stat-card glass-card" data-aos>
+          <div class="stat-icon">🏆</div>
+          <div class="stat-number" data-target="98" data-suffix="%">0</div>
+          <div class="stat-label">Success Rate</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FAQ SECTION ===== -->
+  <section class="section" id="faq">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">FAQ</span>
+        <h2 class="section-title">Frequently Asked Questions</h2>
+        <p class="section-subtitle">Everything you need to know about QuizNova.</p>
+      </div>
+      <div class="faq-list">
+        <div class="faq-item glass-card" data-aos>
+          <button class="faq-question" id="faq1">
+            <span>How do I create a quiz?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Simply scroll to the "Create" section, enter your question, provide four options, select the correct answer, and click "Save Question". Repeat for as many questions as you'd like, then head to the quiz section to start!</p>
+          </div>
+        </div>
+        <div class="faq-item glass-card" data-aos>
+          <button class="faq-question" id="faq2">
+            <span>Is there a limit to the number of questions?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>No! You can add as many questions as you want. Our platform handles quizzes of any size with smooth performance and reliability.</p>
+          </div>
+        </div>
+        <div class="faq-item glass-card" data-aos>
+          <button class="faq-question" id="faq3">
+            <span>How is the score calculated?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Each correct answer earns you 10 points. Your final score is calculated as a percentage of correct answers out of total questions. Detailed breakdowns are shown in the results section.</p>
+          </div>
+        </div>
+        <div class="faq-item glass-card" data-aos>
+          <button class="faq-question" id="faq4">
+            <span>Does the quiz have a timer?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Yes! Each question comes with a 30-second timer. If time runs out, the question is automatically marked as unanswered and the quiz advances to the next question.</p>
+          </div>
+        </div>
+        <div class="faq-item glass-card" data-aos>
+          <button class="faq-question" id="faq5">
+            <span>Can I retake a quiz?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Absolutely! After completing a quiz, you can retake it as many times as you want from the results screen. Practice makes perfect!</p>
+          </div>
+        </div>
+        <div class="faq-item glass-card" data-aos>
+          <button class="faq-question" id="faq6">
+            <span>Is QuizNova free to use?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Yes! QuizNova is completely free. Create unlimited quizzes, add unlimited questions, and share with anyone — no hidden charges.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer" id="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="#" class="nav-logo">
+            <span class="logo-icon">◆</span> Quiz<span class="logo-accent">Nova</span>
+          </a>
+          <p class="footer-desc">The next-generation quiz platform for educators, teams, and creators. Build beautiful, interactive quizzes effortlessly.</p>
+          <div class="footer-socials">
+            <a href="#" class="social-link" aria-label="Twitter">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg>
+            </a>
+            <a href="#" class="social-link" aria-label="GitHub">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            </a>
+            <a href="#" class="social-link" aria-label="LinkedIn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+            </a>
+            <a href="#" class="social-link" aria-label="Instagram">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            </a>
+          </div>
+        </div>
+        <div class="footer-links-col">
+          <h4 class="footer-heading">Product</h4>
+          <ul class="footer-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#create">Create Quiz</a></li>
+            <li><a href="#preview">Take Quiz</a></li>
+            <li><a href="#stats">Statistics</a></li>
+          </ul>
+        </div>
+        <div class="footer-links-col">
+          <h4 class="footer-heading">Company</h4>
+          <ul class="footer-links">
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-links-col">
+          <h4 class="footer-heading">Legal</h4>
+          <ul class="footer-links">
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Cookie Policy</a></li>
+            <li><a href="#">GDPR</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 QuizNova. All rights reserved. Built with ❤️</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Auth Modal Overlay -->
+  <div class="modal-overlay hidden" id="authModal">
+    <div class="modal-card glass-card">
+      <button class="modal-close" id="modalClose">✕</button>
+      <!-- Login Form -->
+      <div id="loginForm">
+        <h2 class="modal-title">Welcome Back</h2>
+        <p class="modal-subtitle">Log in to your QuizNova account</p>
+        <div class="form-group">
+          <label for="loginEmail" class="form-label">Email</label>
+          <input type="email" id="loginEmail" class="form-input" placeholder="your@email.com" />
+        </div>
+        <div class="form-group">
+          <label for="loginPassword" class="form-label">Password</label>
+          <input type="password" id="loginPassword" class="form-input" placeholder="Enter your password" />
+        </div>
+        <button class="btn btn-primary" id="loginSubmitBtn" style="width:100%;justify-content:center">
+          <span class="btn-icon">→</span> Login
+        </button>
+        <p class="modal-switch">Don't have an account? <a href="#" id="switchToSignup">Sign Up</a></p>
+      </div>
+      <!-- Signup Form -->
+      <div id="signupForm" class="hidden">
+        <h2 class="modal-title">Create Account</h2>
+        <p class="modal-subtitle">Join QuizNova and start creating quizzes</p>
+        <div class="form-group">
+          <label for="signupName" class="form-label">Full Name</label>
+          <input type="text" id="signupName" class="form-input" placeholder="John Doe" />
+        </div>
+        <div class="form-group">
+          <label for="signupEmail" class="form-label">Email</label>
+          <input type="email" id="signupEmail" class="form-input" placeholder="your@email.com" />
+        </div>
+        <div class="form-group">
+          <label for="signupPassword" class="form-label">Password</label>
+          <input type="password" id="signupPassword" class="form-input" placeholder="Minimum 6 characters" />
+        </div>
+        <button class="btn btn-primary" id="signupSubmitBtn" style="width:100%;justify-content:center">
+          <span class="btn-icon">✦</span> Create Account
+        </button>
+        <p class="modal-switch">Already have an account? <a href="#" id="switchToLogin">Login</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast notification -->
+  <div class="toast" id="toast">
+    <span class="toast-icon" id="toastIcon">✓</span>
+    <span class="toast-message" id="toastMessage">Action completed</span>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
