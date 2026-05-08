@@ -26,12 +26,33 @@
   async function apiFetch(endpoint, options = {}) {
     const headers = { 'Content-Type': 'application/json', ...options.headers };
     if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
+    
+    const url = `${API_BASE}${endpoint}`;
+    console.log(`[API] ${options.method || 'GET'} ${url}`);
+
     try {
-      const res = await fetch(`${API_BASE}${endpoint}`, { ...options, headers });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || 'Request failed');
+      const res = await fetch(url, { ...options, headers });
+      
+      // If we get a 502/503 from Render, the body might not be JSON
+      const contentType = res.headers.get('content-type');
+      let data;
+      
+      if (contentType && contentType.includes('application/json')) {
+        data = await res.json();
+      } else {
+        const text = await res.text();
+        console.error(`[API] Non-JSON response from ${url}:`, text.substring(0, 200));
+        throw new Error(`Server returned an unexpected response (${res.status}). The backend might be starting up or experiencing issues.`);
+      }
+
+      if (!res.ok) {
+        console.error(`[API] Error ${res.status}:`, data);
+        throw new Error(data.message || `Request failed with status ${res.status}`);
+      }
+      
       return data;
     } catch (err) {
+      console.error(`[API] Fetch Error:`, err);
       throw err;
     }
   }
@@ -189,9 +210,11 @@
     if (!name || !email || !password) { showToast('Please fill all fields', 'error'); return; }
     if (password.length < 6) { showToast('Password must be at least 6 characters', 'error'); return; }
     try {
+      console.log(`[AUTH] Attempting signup for ${email}`);
       const data = await apiFetch('/auth/signup', {
         method: 'POST', body: JSON.stringify({ name, email, password })
       });
+      console.log(`[AUTH] Signup successful:`, data.user);
       authToken = data.token;
       currentUser = data.user;
       localStorage.setItem('quiznova_token', authToken);
@@ -199,7 +222,10 @@
       updateAuthUI();
       loadQuizzes();
       showToast(`Welcome to QuizNova, ${data.user.name}!`);
-    } catch (err) { showToast(err.message, 'error'); }
+    } catch (err) { 
+      console.error(`[AUTH] Signup failed:`, err.message);
+      showToast(err.message, 'error'); 
+    }
   }
 
   async function handleLogin() {
@@ -207,9 +233,11 @@
     const password = $('#loginPassword').value;
     if (!email || !password) { showToast('Please fill all fields', 'error'); return; }
     try {
+      console.log(`[AUTH] Attempting login for ${email}`);
       const data = await apiFetch('/auth/login', {
         method: 'POST', body: JSON.stringify({ email, password })
       });
+      console.log(`[AUTH] Login successful:`, data.user);
       authToken = data.token;
       currentUser = data.user;
       localStorage.setItem('quiznova_token', authToken);
@@ -217,7 +245,10 @@
       updateAuthUI();
       loadQuizzes();
       showToast(`Welcome back, ${data.user.name}!`);
-    } catch (err) { showToast(err.message, 'error'); }
+    } catch (err) { 
+      console.error(`[AUTH] Login failed:`, err.message);
+      showToast(err.message, 'error'); 
+    }
   }
 
   function handleLogout() {
