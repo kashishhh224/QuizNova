@@ -17,22 +17,38 @@ const connectDB = async () => {
   }
 
   try {
-    console.log('⏳ Connecting to MongoDB...');
-    const conn = await mongoose.connect(uri, {
-      serverSelectionTimeoutMS: 5000, // Timeout after 5 seconds
-    });
-    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
-  } catch (error) {
-    console.error(`❌ MongoDB Connection Error: ${error.message}`);
+    console.log('⏳ Connecting to MongoDB Atlas...');
+    console.log(`🔗 Target: ${uri.substring(0, 30)}... (Redacted)`);
     
-    if (error.message.includes('EBADNAME')) {
-      console.error('Hint: This usually means the hostname in your MONGO_URI is incorrect or contains forbidden characters.');
-    } else if (error.message.includes('ETIMEDOUT') || error.message.includes('queryTxt ETIMEOUT')) {
-      console.error('Hint: This often means your IP address is not whitelisted in MongoDB Atlas or there is a network issue.');
+    const conn = await mongoose.connect(uri, {
+      serverSelectionTimeoutMS: 10000, // Timeout after 10 seconds
+      connectTimeoutMS: 10000,         // Connection timeout
+      socketTimeoutMS: 45000,          // Socket timeout
+    });
+
+    console.log('\n-----------------------------------------');
+    console.log('✅ MongoDB Connection Successful!');
+    console.log(`📡 Host: ${conn.connection.host}`);
+    console.log(`📁 Database: ${conn.connection.name}`);
+    console.log('-----------------------------------------\n');
+  } catch (error) {
+    console.error('\n-----------------------------------------');
+    console.error('❌ MongoDB Connection Error');
+    console.error(`Message: ${error.message}`);
+    
+    if (error.name === 'MongoParseError') {
+      console.error('Hint: The connection string format is invalid. Check for typos in your .env file.');
+    } else if (error.message.includes('ECONNREFUSED') || error.message.includes('querySrv')) {
+      console.error('Hint: DNS resolution failed. This often happens with mongodb+srv://. Use the standard mongodb:// format instead.');
+    } else if (error.message.includes('ETIMEDOUT') || error.message.includes('timeout')) {
+      console.error('Hint: Connection timed out. This usually means:');
+      console.error('  1. Your IP address is not whitelisted in MongoDB Atlas (Network Access).');
+      console.error('  2. A firewall is blocking port 27017.');
     } else if (error.message.includes('Authentication failed')) {
-      console.error('Hint: Your database username or password in MONGO_URI is incorrect.');
+      console.error('Hint: The database username or password in MONGO_URI is incorrect.');
     }
     
+    console.error('-----------------------------------------\n');
     process.exit(1);
   }
 };
